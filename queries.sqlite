@@ -1,0 +1,100 @@
+-- How many campaings does CoolTShirts use
+select count(distinct utm_campaign) as 'Campaign count'
+from page_visits;
+
+-- How many Sources does CoolTShirts use
+select count(distinct utm_source) as 'Sources'
+from page_visits;
+
+-- list sources per campaign to show their relationships
+select distinct utm_campaign as Campaigns, 
+  utm_source as Sources
+from page_visits;
+
+-- Unique Webpages on the Website
+select distinct page_name as 'Websites'
+from page_visits;
+
+-- No: of first touches each campaign responsible for
+with first_touch as (
+  select user_id, 
+         min(timestamp) as 'first_touch_at'
+  from page_visits
+  group by user_id),
+  
+ft_attr as (select ft.user_id,
+       ft.first_touch_at,
+       pv.utm_source,
+       pv.utm_campaign
+from first_touch ft
+join page_visits pv
+  on ft.user_id = pv.user_id
+  and ft.first_touch_at = pv.timestamp)
+
+select ft_attr.utm_source as Source,
+       ft_attr.utm_campaign as Campaign,
+       count(*) as Count
+from ft_attr
+group by 1, 2
+order by 3 desc;
+
+-- No: of Last touches each campaign responsible for
+with last_touch as (
+  select user_id, 
+         max(timestamp) as 'last_touch_at'
+  from page_visits
+  group by user_id),
+  
+lt_attr as (select lt.user_id,
+       lt.last_touch_at,
+       pv.utm_source,
+       pv.utm_campaign
+from last_touch lt
+join page_visits pv
+  on lt.user_id = pv.user_id
+  and lt.last_touch_at = pv.timestamp)
+
+select lt_attr.utm_source as Source,
+       lt_attr.utm_campaign as Campaign,
+       count(*) as Count
+from lt_attr
+group by 1, 2
+order by 3 desc;
+
+-- Visitors who have made a purchase
+select count(distinct user_id) 'Customers that Purchase'
+from page_visits
+where page_name = '4 - purchase';
+
+-- How many Last touches on the purchase page each campaign responsible for
+with last_touch as (
+  select user_id, 
+         max(timestamp) as 'last_touch_at'
+  from page_visits
+  where page_name = '4 - purchase'
+  group by user_id),
+  
+lt_attr as (select lt.user_id,
+       lt.last_touch_at,
+       pv.utm_source,
+       pv.utm_campaign
+from last_touch lt
+join page_visits pv
+  on lt.user_id = pv.user_id
+  and lt.last_touch_at = pv.timestamp)
+
+select lt_attr.utm_source as Source,
+       lt_attr.utm_campaign as Campaign,
+       count(*) as Count
+from lt_attr
+group by 1, 2
+order by 3 desc;
+
+-- Which source is better for generating traffic
+select utm_source as Source, 
+  count(distinct user_id) as 'Visit Count'
+from page_visits
+group by 1
+order by 2 desc;
+
+
