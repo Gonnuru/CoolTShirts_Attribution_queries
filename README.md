@@ -15,9 +15,9 @@ Recently, CTS started a few marketing campaigns to increase website visits and p
 3. Optimized the campaign budget.
     - CoolTShirts can re-invest in 5 campaigns. Which should they pick and why?
 
-Additionally, I have prepared a [PPT]() which showcases the queries and outputs along with a summary of findings.  
+Additionally, I have prepared a [PPT](https://github.com/Gonnuru/CoolTShirts_Attribution_queries/blob/master/CoolTShirts.pptx) which showcases the queries and outputs along with a summary of findings.  
 # Schema
-![]()
+![](https://github.com/Gonnuru/CoolTShirts_Attribution_queries/blob/master/schema.png)
 
 # Parameters
 - **UTM parameters** are a way of tracking visits to a website. Developers, marketers, and analysts use them to capture information like the time, attribution source, and attribution medium for each user visit.
